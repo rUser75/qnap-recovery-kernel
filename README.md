@@ -45,20 +45,112 @@ or
 ddrescue -n /dev/sda3 /otherstoragepath/sda3.img /pathtologfile/logfile
 ```
 > **note** using ddrescue you can try to fix some I/O errors if the source hdd was damaged and specifing the logfile (now called domain-mapfile) you can stop end resume the copy
->```
->dnf -y install ddrescue (on centos)
->
->	add-apt-repository universe
-	apt-get install gddrescue  (for ubuntu)
-
+```
+dnf -y install ddrescue (on centos)
+```
+or
+```
+add-apt-repository universe
+apt-get install gddrescue  (for ubuntu)
+```
 
 ## try to recover.
 you need a linux box (centos, ubuntu live are tested) with sufficient free space for copy the recovered data (with an external usb disk for example)
 install the qemu packages using 
 ```
-dnf install -y qemu-kvm (for centos )
+dnf install -y qemu-kvm (for centos)
+
+apt-get  install qemu-kvm (for ubuntu)
+```
+run the follow command to run the custom kernel in a virtual machine on redhat (on ubuntu repalce /usr/libexec/qemu-kvm with qemu-system-x86_64)
 
 ```
+/usr/libexec/qemu-kvm \
+-kernel bzImage \
+-initrd initrdC.boot \
+-append "root=/dev/ram0 rw init=/bin/busybox console=ttyS0" \
+-nographic -m 1024M \
+-serial mon:stdio \
+-drive file=sdb3.img,format=raw \
+-drive file=/dev/disk_were_copy,format=raw \
+```
+> sdb3.img is the name of the image file or if you want use the disk the block device of the disk (/dev/sdXXXX)
+
+> /dev/disk_were_copy is the external disk where you can copy data
+
+**note:**  inside the VM the first row -drive become /dev/sda the second /dev/sdb etc
+
+if all works as expected the VM starts.
+```
+Welcome to the recovery kernel for QNAP product
+
+use admin/admin for login
+
+NAS login:
+```
+
+now we can try to mount open the volume ( you can use the ddrescue_volume.img for the test)
+
+```
+[~] # mdadm --examine --scan
+ARRAY /dev/md/1  metadata=1.0 UUID=e767caf1:30504500:f7da4b48:92bb490e name=1
+
+[~] # mdadm --assemble --run -o /dev/md1 --uuid=e767caf1:30504500:f7da4b48:92b>
+[  185.188681] md: md1 stopped.
+[  185.197586] md/raid1:md1: active with 1 out of 2 mirrors
+[  185.199758] md1: detected capacity change from 0 to 32833536
+mdadm: /dev/md1 has been started with 1 drive (out of 2).
+
+
+[~] # vgs
+  VG   #PV #LV #SN Attr   VSize  VFree
+  vg1    1   3   1 wz--n- 28.00m    0
+
+[~] # lvs
+  LV        VG   Attr       LSize  Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert
+  lv1       vg1  owi---tz-- 12.00m tp1
+  snapShots vg1  swi---s---  4.00m      lv1
+  tp1       vg1  twi---tz-- 20.00m
+
+we need to active the volume lv1 (or use the proper volume name if it was different)
+
+[~] # lvchange -ay vg1/lv1
+[  312.500140] device-mapper: thin metadata: __create_persistent_data_objects: block manger get correctly
+[  312.556542] device-mapper: thin metadata: dm_pool_set_mapped_threshold: threshold: 0 total_mapped_blocks: 192 new_threshold: 320
+[  312.561102] device-mapper: thin: maybe_resize_data_dev: expand pool origin max threshold to 320
+[  312.569190] device-mapper: snapshots: Snapshot is marked invalid.
+
+
+[~] # lvs
+  LV        VG   Attr       LSize  Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert
+  lv1       vg1  owi-a-tz-- 12.00m tp1         100.00
+  snapShots vg1  swi-I-s---  4.00m      lv1    100.00
+  tp1       vg1  twi---tz-- 20.00m             60.00  36.91
+
+now the volume lv1 is active and now we can try to mount it
+
+
+[~] # mount -t ext4 -o ro /dev/vg1/lv1 /mnt
+[  409.386651] ext4_init_reserve_inode_table0: dm-4, 2
+[  409.388596] ext4_init_reserve_inode_table2: dm-4, 2, 0, 0, 1024
+[  409.390997] EXT4-fs (dm-4): mounted filesystem (<none>) with ordered data mode. Opts:
+
+[~] # df -k
+Filesystem           1K-blocks      Used Available Use% Mounted on
+none                    409600    146788    262812  36% /
+devtmpfs                481384         0    481384   0% /dev
+tmpfs                   131072        20    131052   0% /tmp
+tmpfs                   500332         0    500332   0% /dev/shm
+tmpfs                    16384         0     16384   0% /share
+df: /mnt/snapshot/export: No such file or directory
+cgroup_root             500332         0    500332   0% /sys/fs/cgroup
+tmpfs                    24576         0     24576   0% /smb_tmp
+tmpfs                    65536         0     65536   0% /tunnel_agent
+/dev/vg1/lv1             10871     10625         0 100% /mnt
+
+IT'S WORKS
+```
+now you can mount the other disk (on VM is /dev/sdb to a another mount copy and copy the data.
 
 
 
