@@ -19,6 +19,8 @@ for me it is also important don't work directly on the disks but on a copy.
 the copy of the data partition can be do using some tool as dd or ddrescue.
 > ** If you continue the read I suppose that do you know how to use a linux and that there ara no warranty that all works as expected...**
 
+you need a linux box 
+
 ## make copy of the data partition
 attach one of the disks into a linux system (is it possible to use sata to usb adapter, a usb box, directly attached ...)
 using fdisk to determine to data partition, it is the big one for example (usually the partiotion 3)
