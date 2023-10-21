@@ -64,6 +64,7 @@ dnf install -y qemu-kvm (for centos)
 
 apt-get  install qemu-kvm (for ubuntu)
 ```
+download the kernel image from the menu release (https://github.com/rUser75/qnap-recovery-kernel/releases/tag/first)
 run the follow command to run the custom kernel in a virtual machine on redhat (on ubuntu repalce /usr/libexec/qemu-kvm with qemu-system-x86_64)
 
 ```
