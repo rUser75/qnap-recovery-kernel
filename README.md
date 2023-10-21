@@ -19,9 +19,6 @@ for me it is also important don't work directly on the disks but on a copy.
 the copy of the data partition can be do using some tool as dd or ddrescue.
 > ** If you continue the read I suppose that do you know how to use a linux and that there ara no warranty that all works as expected...**
 
-
-## what
-
 ## make copy of the data partition
 attach one of the disks into a linux system (is it possible to use sata to usb adapter, a usb box, directly attached ...)
 using fdisk to determine to data partition, it is the big one for example (usually the partiotion 3)
@@ -38,10 +35,35 @@ Units = cylinders of 16065 * 512 = 8225280 bytes
 /dev/sda3             133      243138  1951945693   83  Linux
 /dev/sda4          243139      243200      498012   83  Linux
 ```
+after identified the right partion, using another hdd for save the image file you can use dd or ddrescue
+
+```
+dd if=/dev/sda3 of=/otherstoragepath/sda3.img bs=8k 
+```
+or 
+```
+ddrescue -n /dev/sda3 /otherstoragepath/sda3.img /pathtologfile/logfile
+```
+> **note** using ddrescue you can try to fix some I/O errors if the source hdd was damaged and specifing the logfile (now called domain-mapfile) you can stop end resume the copy
+>```
+>dnf -y install ddrescue (on centos)
+>
+>	add-apt-repository universe
+	apt-get install gddrescue  (for ubuntu)
 
 
-## test the on linux box
-you can try to mount the test volume **ddrescue_volume.img** on a linux box to see what happen
+## try to recover.
+you need a linux box (centos, ubuntu live are tested) with sufficient free space for copy the recovered data (with an external usb disk for example)
+install the qemu packages using 
+```
+dnf install -y qemu-kvm (for centos )
+
+```
+
+
+
+## test the qnap test volume on linux box
+you can try to mount the test volume **ddrescue_volume.img** on a linux box to see what happen-
 
 ```
 # losetup /dev/loop10 ddrescue_volume.img
