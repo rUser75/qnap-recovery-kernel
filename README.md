@@ -19,7 +19,6 @@ for me it is also important don't work directly on the disks but on a copy.
 the copy of the data partition can be do using some tool as dd or ddrescue.
 > ** If you continue the read I suppose that do you know how to use a linux and that there ara no warranty that all works as expected...**
 
-you need a linux box 
 
 ## make copy of the data partition
 attach one of the disks into a linux system (is it possible to use sata to usb adapter, a usb box, directly attached ...)
@@ -61,14 +60,23 @@ apt-get install gddrescue
 
 ## try to recover.
 you need a linux box (centos, ubuntu live are tested) with sufficient free space for copy the recovered data (with an external usb disk for example)
-install the qemu packages using 
+
+before start check if qemu packages are installed if not install it using 
 ```
 dnf install -y qemu-kvm (for centos)
 
 apt-get  install qemu-kvm (for ubuntu)
 ```
-download the kernel image from the menu release (https://github.com/rUser75/qnap-recovery-kernel/releases/tag/first)
-run the follow command to run the custom kernel in a virtual machine on redhat (on ubuntu repalce /usr/libexec/qemu-kvm with qemu-system-x86_64)
+
+
+download the kernel images attached here and put them in a directory. 
+
+In the release menu (https://github.com/rUser75/qnap-recovery-kernel/releases/tag/first) you can find a 
+* bigger initrdC.boot
+* lvm test file
+  
+  
+run the follow command to run the custom kernel in a virtual machine on redhat (on ubuntu replace /usr/libexec/qemu-kvm with qemu-system-x86_64)
 
 ```
 /usr/libexec/qemu-kvm \
