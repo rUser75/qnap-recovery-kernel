@@ -47,13 +47,16 @@ or
 ddrescue -n /dev/sda3 /otherstoragepath/sda3.img /pathtologfile/logfile
 ```
 > **note** using ddrescue you can try to fix some I/O errors if the source hdd was damaged and specifing the logfile (now called domain-mapfile) you can stop end resume the copy
+
+
+Below the basic commands for install ddrescue on centos
 ```
 dnf -y install ddrescue (on centos)
 ```
-or
+or on ubuntu
 ```
 add-apt-repository universe
-apt-get install gddrescue  (for ubuntu)
+apt-get install gddrescue
 ```
 
 ## try to recover.
