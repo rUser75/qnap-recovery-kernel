@@ -93,7 +93,7 @@ eseguire il seguente comando per eseguire il kernel personalizzato in una macchi
 -drive file=sdb3.img,format=raw \
 -drive file=/dev/disk_were_copy,format=raw \
 ```
-```
+
 > sdb3.img è il nome del file immagine o se vuoi usare il disco il dispositivo a blocchi del disco (/dev/sdXXXX)
 
 > /dev/disk_were_copy è il disco esterno in cui puoi copiare i dati
