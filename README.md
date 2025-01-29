@@ -17,4 +17,4 @@ a minimal QTS kernel running under qemu with lvm support
 
 ## change log
 
- * added crypsetup support see (#1+)
+ * added crypsetup support see https://github.com/rUser75/qnap-recovery-kernel/issues/1
