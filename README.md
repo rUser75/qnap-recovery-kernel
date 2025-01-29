@@ -20,4 +20,4 @@ a minimal QTS kernel running under qemu with lvm support
 
 # Acknowledgements and references
 
-* https://gist.github.com/galaxy4public
+* [galaxy4public/pc1.c](https://gist.github.com/galaxy4public/0420c7c9a8e3ff860c8d5dce430b2669)
